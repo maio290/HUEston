@@ -47,7 +47,10 @@ namespace HUEston
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.overviewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.roomsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.dashboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.lampsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.dashboardToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.scenesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.configToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.bridgeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.presetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -141,6 +144,7 @@ namespace HUEston
 									this.overviewToolStripMenuItem,
 									this.roomsToolStripMenuItem,
 									this.lampsToolStripMenuItem,
+									this.scenesToolStripMenuItem,
 									this.configToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
@@ -156,15 +160,38 @@ namespace HUEston
 			// 
 			// roomsToolStripMenuItem
 			// 
+			this.roomsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+									this.dashboardToolStripMenuItem});
 			this.roomsToolStripMenuItem.Name = "roomsToolStripMenuItem";
 			this.roomsToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
 			this.roomsToolStripMenuItem.Text = "Rooms";
 			// 
+			// dashboardToolStripMenuItem
+			// 
+			this.dashboardToolStripMenuItem.Name = "dashboardToolStripMenuItem";
+			this.dashboardToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+			this.dashboardToolStripMenuItem.Text = "Dashboard";
+			this.dashboardToolStripMenuItem.Click += new System.EventHandler(this.DashboardToolStripMenuItemClick);
+			// 
 			// lampsToolStripMenuItem
 			// 
+			this.lampsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+									this.dashboardToolStripMenuItem1});
 			this.lampsToolStripMenuItem.Name = "lampsToolStripMenuItem";
 			this.lampsToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
 			this.lampsToolStripMenuItem.Text = "Lamps";
+			// 
+			// dashboardToolStripMenuItem1
+			// 
+			this.dashboardToolStripMenuItem1.Name = "dashboardToolStripMenuItem1";
+			this.dashboardToolStripMenuItem1.Size = new System.Drawing.Size(131, 22);
+			this.dashboardToolStripMenuItem1.Text = "Dashboard";
+			// 
+			// scenesToolStripMenuItem
+			// 
+			this.scenesToolStripMenuItem.Name = "scenesToolStripMenuItem";
+			this.scenesToolStripMenuItem.Size = new System.Drawing.Size(55, 20);
+			this.scenesToolStripMenuItem.Text = "Scenes";
 			// 
 			// configToolStripMenuItem
 			// 
@@ -499,9 +526,10 @@ namespace HUEston
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menuStrip1;
 			this.MaximizeBox = false;
-			this.MinimizeBox = false;
 			this.Name = "MainForm";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "HUEston";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFormFormClosing);
 			this.statusStrip1.ResumeLayout(false);
 			this.statusStrip1.PerformLayout();
 			this.menuStrip1.ResumeLayout(false);
@@ -516,6 +544,9 @@ namespace HUEston
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.ToolStripMenuItem dashboardToolStripMenuItem1;
+		private System.Windows.Forms.ToolStripMenuItem dashboardToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem scenesToolStripMenuItem;
 		private System.Windows.Forms.Button BTColSelect;
 		private System.Windows.Forms.Button BTIncSat;
 		private System.Windows.Forms.Button BTDecSat;

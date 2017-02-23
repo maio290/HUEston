@@ -6,6 +6,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.IO;
 
 namespace HUEston
 {
@@ -16,6 +17,7 @@ namespace HUEston
 	{
 		
 		bool lockAcquire = false;
+		bool didSetup = false;
 		
 		public Setup()
 		{
@@ -87,26 +89,31 @@ namespace HUEston
 				}
 				
 				// Begin AUTH Process with HUE Bridge
-				HUEFunctions hf = new HUEFunctions(TBIP.Text);
-				hf.auth();
 				
-				if(hf.authresponse.Equals(String.Empty))
+				if(MessageBox.Show("Please press the Button on your HUE Bridge now and click the OK Button.","[HUEston] Auth Needed",MessageBoxButtons.OKCancel,MessageBoxIcon.Information) == DialogResult.OK)
 				{
-					MessageBox.Show("Failed to auth user after 5 seconds - please press the Button on your Bridge first!","[HUEston] Error while acquiring username",MessageBoxButtons.OK,MessageBoxIcon.Error);
-					return;
-				}
-				else
-				{
-					string usernameJSON = hf.authresponse;
+					HUEFunctions hf = new HUEFunctions(TBIP.Text);
+					hf.auth();
 					
-					int usernameStart = usernameJSON.IndexOf("username")+11;
-					int usernameEnd = usernameJSON.IndexOf('"',usernameStart);
-					
-					string username = usernameJSON.Substring(usernameStart,usernameEnd-usernameStart);
-
-					SimpleCFGWriter cfg = new SimpleCFGWriter(TBIP.Text,username);
-					this.Dispose();
-					
+					if(hf.authresponse.Equals(String.Empty))
+					{
+						MessageBox.Show("Failed to auth user after 5 seconds - please press the Button on your Bridge first!","[HUEston] Error while acquiring username",MessageBoxButtons.OK,MessageBoxIcon.Error);
+						return;
+					}
+					else
+					{
+						string usernameJSON = hf.authresponse;
+						
+						int usernameStart = usernameJSON.IndexOf("username")+11;
+						int usernameEnd = usernameJSON.IndexOf('"',usernameStart);
+						
+						string username = usernameJSON.Substring(usernameStart,usernameEnd-usernameStart);
+	
+						SimpleCFGWriter cfg = new SimpleCFGWriter(TBIP.Text,username);
+						didSetup = true;
+						this.Dispose();
+						
+					}
 				}
 				
 				
@@ -116,7 +123,19 @@ namespace HUEston
 		
 		void SetupFormClosed(object sender, FormClosedEventArgs e)
 		{
+			if(didSetup)
+			{
 			Application.Restart();
+			}
+			else
+			{
+				if(File.Exists("./config.cfg"))
+				{this.Dispose();}
+				else
+				{Application.Exit();}
+			
+			}
+			
 		}
 	}
 }

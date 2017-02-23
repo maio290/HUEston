@@ -5,3 +5,4 @@ E:\Bibliotheken\Dokumente\SharpDevelop Projects\HUEston\HUEston\obj\Release\HUEs
 E:\Bibliotheken\Dokumente\SharpDevelop Projects\HUEston\HUEston\obj\Release\HUEston.Setup.resources
 E:\Bibliotheken\Dokumente\SharpDevelop Projects\HUEston\HUEston\obj\Release\HUEston.csproj.GenerateResource.Cache
 E:\Bibliotheken\Dokumente\SharpDevelop Projects\HUEston\HUEston\obj\Release\HUEston.exe
+E:\Bibliotheken\Dokumente\SharpDevelop Projects\HUEston\HUEston\obj\Release\HUEston.RoomDashboard.resources

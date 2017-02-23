@@ -15,6 +15,14 @@ namespace HUEston
 		public string bulbs;
 		public int gid { get; set; }
 		public string name { get; set; }
+		public string colourmode;
+		public int bri;
+		public bool on;
+		public int hue;
+		public double x;
+		public double y;
+		public bool stateFetch = false;
+		
 		
 		public Group(int gid, string name, string assignedBulbs)
 		{

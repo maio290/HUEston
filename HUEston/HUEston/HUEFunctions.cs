@@ -6,6 +6,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Globalization;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Text;
@@ -183,6 +185,56 @@ namespace HUEston
 			return groupInfo;			
 			
 		}
+
+		public void extractGroupStates(int GID)
+		{
+			string JSONResponse;
+			try{
+			JSONResponse = ws.getHTMLfromURL("http://"+bridgeIP+"/api/"+bridgeUser+"/groups/"+GID);	                  
+			}
+			catch(System.Net.WebException e)
+			{
+				return;
+			}
+			Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+			try
+			{
+			int briStart = JSONResponse.IndexOf("bri")+5;
+			int briEnd = JSONResponse.IndexOf(',',briStart);
+			
+			int bri = Convert.ToInt32(JSONResponse.Substring(briStart,briEnd-briStart));
+			
+			int onStart = JSONResponse.IndexOf("\"on\":")+5;
+			int onEnd = JSONResponse.IndexOf(',',onStart);
+			bool start = Convert.ToBoolean(JSONResponse.Substring(onStart,onEnd-onStart));
+			
+			int xyStart = JSONResponse.IndexOf("\"xy\":[")+6;
+			int xyEnd = JSONResponse.IndexOf(']',xyStart);
+			
+			double x = Convert.ToDouble(JSONResponse.Substring(xyStart,JSONResponse.IndexOf(',',xyStart)-xyStart));
+			double y = Convert.ToDouble(JSONResponse.Substring(JSONResponse.IndexOf(',',xyStart)+1,xyEnd-2-JSONResponse.IndexOf(',',xyStart)+1));
+			
+			int colourmodeStart = JSONResponse.IndexOf("colormode")+12;
+			int colourmodeEnd = JSONResponse.IndexOf('"',colourmodeStart);
+			
+			string colourmode = JSONResponse.Substring(colourmodeStart,colourmodeEnd-colourmodeStart);
+			
+			int listindex = this.GroupList.FindIndex(id => id.gid == GID);
+			this.GroupList[listindex].bri = bri;
+			this.GroupList[listindex].on = start;
+			this.GroupList[listindex].x = x;
+			this.GroupList[listindex].y = y;
+			this.GroupList[listindex].colourmode = colourmode;
+			this.GroupList[listindex].stateFetch = true;
+			}
+			catch(FormatException)
+			{return;}
+			
+			
+			
+			 
+			
+		}
 		
 		public string[][] extractState(int primary, string json)
 		{
@@ -293,12 +345,12 @@ namespace HUEston
 
 		public void GRPhueInc(int gid)
 		{
-			ws.putData("http://"+bridgeIP+"/api/"+bridgeUser+"/groups/"+gid+"/action","{\"hue_inc\":50}");
+			ws.putData("http://"+bridgeIP+"/api/"+bridgeUser+"/groups/"+gid+"/action","{\"hue_inc\":1500}");
 		}
 		
 		public void GRPhueDec(int gid)
 		{
-			ws.putData("http://"+bridgeIP+"/api/"+bridgeUser+"/groups/"+gid+"/action","{\"hue_inc\":-50}");
+			ws.putData("http://"+bridgeIP+"/api/"+bridgeUser+"/groups/"+gid+"/action","{\"hue_inc\":-1500}");
 		}
 		
 		public void GRPsatInc(int gid)
@@ -319,6 +371,55 @@ namespace HUEston
 		public void GRPsetXY(int gid, double x, double y)
 		{
 			ws.putData("http://"+bridgeIP+"/api/"+bridgeUser+"/groups/"+gid+"/action","{\"xy\":["+x+","+y+"]}");
+		}
+		
+		public void GRPbriSet(int gid, int bri)
+		{
+			ws.putData("http://"+bridgeIP+"/api/"+bridgeUser+"/groups/"+gid+"/action","{\"bri\":"+bri+"}");
+		}
+
+		public void switchColourDialog(int GID)
+		{
+				Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+				ColorDialog colPick = new ColorDialog();
+				DialogResult colResult = colPick.ShowDialog();
+				if(colResult == DialogResult.OK)
+				{
+					// this is according to https://github.com/PhilipsHue/PhilipsHueSDK-iOS-OSX/commit/f41091cf671e13fe8c32fcced12604cd31cceaf3			
+					Color RGB = colPick.Color;
+					double[] rgb = new Double[3]; 
+					rgb[0] = Convert.ToDouble(RGB.R);
+					rgb[1] = Convert.ToDouble(RGB.G);
+					rgb[2] = Convert.ToDouble(RGB.B);
+					double a = Convert.ToDouble(RGB.A);
+					rgb[0] /= 255D;
+					rgb[1] /= 255D;
+					rgb[2] /= 255D;
+	
+					// fix colours
+					for(int i = 0; i<rgb.Length; i++)
+					{
+						if(rgb[i] > 0.04045D)
+						{
+							rgb[i] = Math.Pow((rgb[i]+0.55D)/(1.0D+0.055D),2.4D);
+						}
+						else
+						{
+							rgb[i] /= 12.92D;
+						}
+					}
+	
+					double X = rgb[0] * 0.649926D + rgb[1] * 0.103455D + rgb[2] * 0.197109D;
+				   
+					double Y = rgb[0] * 0.234327D + rgb[1] * 0.743075D + rgb[2] * 0.022598D;
+				   
+					double Z = rgb[0] * 0.0000000D + rgb[1] * 0.053077D + rgb[2] * 1.035763D;
+					
+					double x = Math.Round(X/(X+Y+Z),3);
+					double y = Math.Round(Y/(X+Y+Z),3);
+					
+					this.GRPsetXY(GID,x,y);		
+				}		
 		}		
 	}
 }

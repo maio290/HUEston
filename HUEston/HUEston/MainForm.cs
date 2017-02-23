@@ -50,9 +50,12 @@ namespace HUEston
 			}
 			else
 			{
+				this.WindowState = FormWindowState.Minimized;
+				this.ShowInTaskbar = false;
 				MessageBox.Show("Please setup HUEston now - we'll try to autodetect the bridge first, if this won't work, you'll have to enter the IP Address manually.","[HUEston] Initial Setup",MessageBoxButtons.OK,MessageBoxIcon.Information);
 				Setup setup = new Setup();
 				setup.Show();
+				
 			}
 			
 			
@@ -63,7 +66,6 @@ namespace HUEston
 		
 		void BridgeToolStripMenuItemClick(object sender, EventArgs e)
 		{
-				this.Hide();
 				Setup setup = new Setup();
 				setup.Show();
 		}
@@ -96,20 +98,9 @@ namespace HUEston
 		
 		void BTColSelectClick(object sender, EventArgs e)
 		{
-			Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
-			ColorDialog colPick = new ColorDialog();
-			DialogResult colResult = colPick.ShowDialog();
-			if(colResult == DialogResult.OK)
-			{
-				// see http://www.niwa.nu/2013/05/math-behind-colorspace-conversions-rgb-hsl/
-				Color RGB = colPick.Color;
-				double[] rgb = new Double[3]; 
-				rgb[0] = Convert.ToDouble(RGB.R);
-				rgb[1] = Convert.ToDouble(RGB.G);
-				rgb[2] = Convert.ToDouble(RGB.B);
-				double a = Convert.ToDouble(RGB.A);
-					
-				/*			
+				hf.switchColourDialog(selGID);
+				/*
+ 				see http://www.niwa.nu/2013/05/math-behind-colorspace-conversions-rgb-hsl/			
 				double min = 256;
 				double max = -1;
 				int maxIndex;
@@ -161,41 +152,8 @@ namespace HUEston
 					hue += 360;
 				}
 				hue = hue*60;
-				*/
-				
-
-				// this is according to https://github.com/PhilipsHue/PhilipsHueSDK-iOS-OSX/commit/f41091cf671e13fe8c32fcced12604cd31cceaf3
-				rgb[0] /= 255D;
-				rgb[1] /= 255D;
-				rgb[2] /= 255D;
-
-				// fix colours
-				for(int i = 0; i<rgb.Length; i++)
-				{
-					if(rgb[i] > 0.04045D)
-					{
-						rgb[i] = Math.Pow((rgb[i]+0.55D)/(1.0D+0.055D),2.4D);
-					}
-					else
-					{
-						rgb[i] /= 12.92D;
-					}
-				}
-
-				double X = rgb[0] * 0.649926D + rgb[1] * 0.103455D + rgb[2] * 0.197109D;
-			   
-				double Y = rgb[0] * 0.234327D + rgb[1] * 0.743075D + rgb[2] * 0.022598D;
-			   
-				double Z = rgb[0] * 0.0000000D + rgb[1] * 0.053077D + rgb[2] * 1.035763D;
-				
-				double x = Math.Round(X/(X+Y+Z),3);
-				double y = Math.Round(Y/(X+Y+Z),3);
-				
-				hf.GRPsetXY(hf.GroupList[selGID].gid,x,y);
-											
+				*/		
 			
-				
-			}
 		}
 		
 		void BTIncSatClick(object sender, EventArgs e)
@@ -231,6 +189,17 @@ namespace HUEston
 		void BTColdClick(object sender, EventArgs e)
 		{
 			hf.GRPsetCT(hf.GroupList[selGID].gid,153);
+		}
+		
+		void DashboardToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			RoomDashboard RD = new RoomDashboard(hf);
+			RD.Show();
+		}
+		
+		void MainFormFormClosing(object sender, FormClosingEventArgs e)
+		{
+			Application.Exit();
 		}
 	}
 }

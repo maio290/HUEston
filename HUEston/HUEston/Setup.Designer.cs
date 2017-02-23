@@ -145,6 +145,7 @@ namespace HUEston
 			this.MinimizeBox = false;
 			this.Name = "Setup";
 			this.ShowInTaskbar = false;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Setup";
 			this.TopMost = true;
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SetupFormClosed);
