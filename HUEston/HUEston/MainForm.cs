@@ -57,11 +57,6 @@ namespace HUEston
 				setup.Show();
 				
 			}
-			
-			
-			//
-			// TODO: Add constructor code after the InitializeComponent() call.
-			//
 		}
 		
 		void BridgeToolStripMenuItemClick(object sender, EventArgs e)
@@ -94,6 +89,7 @@ namespace HUEston
 		void CBRoomsSelectedIndexChanged(object sender, EventArgs e)
 		{
 			selGID =  Convert.ToInt32(CBRooms.SelectedValue.ToString());
+			selGID =  hf.GroupList.FindIndex(id => id.gid == selGID);
 		}
 		
 		void BTColSelectClick(object sender, EventArgs e)
@@ -200,6 +196,18 @@ namespace HUEston
 		void MainFormFormClosing(object sender, FormClosingEventArgs e)
 		{
 			Application.Exit();
+		}
+		
+		void DashboardToolStripMenuItem1Click(object sender, EventArgs e)
+		{
+			LightDashboard LD = new LightDashboard(hf);
+			LD.Show();
+			
+		}
+		
+		void AboutToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			MessageBox.Show("HUEston Version 0.52 - 28.03.2017 - written by Mario-Luca Hoffmann \nhttps://github.com/maio290/HUEston","HUEston - About",MessageBoxButtons.OK,MessageBoxIcon.Information);
 		}
 	}
 }

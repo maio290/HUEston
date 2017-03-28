@@ -26,9 +26,9 @@ namespace HUEston
 		
 		public Group(int gid, string name, string assignedBulbs)
 		{
-			this.bulbs = assignedBulbs;
 			this.gid = gid;
-			this.name = name;
+			this.name = name;			
+			this.bulbs = assignedBulbs;
 		}
 		
 		

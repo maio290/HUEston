@@ -104,6 +104,12 @@ namespace HUEston
 			{
 				if(json.IndexOf("\""+i+"\":{") != -1)
 				{
+					// Bugfix for deleted groups (yes, primary keys will not be shifted, even if the group was deleted)
+					
+					if(json.IndexOf("not available") != -1)
+					{continue;}
+
+					
 					primaries.Add(i);
 				}
 			}
@@ -128,7 +134,7 @@ namespace HUEston
 			for(int i = 1; i<100; i++)
 			{
 				if(json.IndexOf("\""+i+"\"") != -1)
-				{
+				{	
 					primaries.Add(i);
 				}
 			}
@@ -143,6 +149,28 @@ namespace HUEston
 			return primaryKeys;
 			
 			
+		}
+		
+		public string getState(int id)
+		{
+			// get current json string from the current light id
+			string JSONResponse;
+			try{
+			JSONResponse = ws.getHTMLfromURL("http://"+bridgeIP+"/api/"+bridgeUser+"/lights/"+id);	                  
+			}
+			catch(System.Net.WebException e)
+			{
+				return null;
+			}	
+			return JSONResponse;			
+		}
+		
+		public int extractBri(string json)
+		{
+			int briStart = json.IndexOf("\"bri\":")+6;
+			int briEnd = json.IndexOf(",",briStart);
+			int bri = Convert.ToInt32(json.Substring(briStart,briEnd-briStart));
+			return bri;                
 		}
 		
 		public string[] extractBasicInfo(int primary, string json)
@@ -321,7 +349,17 @@ namespace HUEston
 		{
 			ws.putData("http://"+bridgeIP+"/api/"+bridgeUser+"/lights/"+id+"/state","{\"bri_inc\":-50}");
 		}
-
+		
+		public void setXY(int id, double x, double y)
+		{
+			ws.putData("http://"+bridgeIP+"/api/"+bridgeUser+"/lights/"+id+"/state","{\"xy\":["+x+","+y+"]}");
+		}
+		
+		public void setBRI(int id, int bri)
+		{
+			ws.putData("http://"+bridgeIP+"/api/"+bridgeUser+"/lights/"+id+"/state","{\"bri\":"+bri+"}");
+		}		
+		
 		// Group functions
 		public void GRPturnOn(int gid)
 		{
@@ -380,6 +418,7 @@ namespace HUEston
 
 		public void switchColourDialog(int GID)
 		{
+				// used for groups
 				Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
 				ColorDialog colPick = new ColorDialog();
 				DialogResult colResult = colPick.ShowDialog();
@@ -420,6 +459,52 @@ namespace HUEston
 					
 					this.GRPsetXY(GID,x,y);		
 				}		
-		}		
+		}
+
+		public void switchColourDialogID(int ID)
+		{
+				// used for one bulb
+				Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
+				ColorDialog colPick = new ColorDialog();
+				DialogResult colResult = colPick.ShowDialog();
+				if(colResult == DialogResult.OK)
+				{
+					// this is according to https://github.com/PhilipsHue/PhilipsHueSDK-iOS-OSX/commit/f41091cf671e13fe8c32fcced12604cd31cceaf3			
+					Color RGB = colPick.Color;
+					double[] rgb = new Double[3]; 
+					rgb[0] = Convert.ToDouble(RGB.R);
+					rgb[1] = Convert.ToDouble(RGB.G);
+					rgb[2] = Convert.ToDouble(RGB.B);
+					double a = Convert.ToDouble(RGB.A);
+					rgb[0] /= 255D;
+					rgb[1] /= 255D;
+					rgb[2] /= 255D;
+	
+					// fix colours
+					for(int i = 0; i<rgb.Length; i++)
+					{
+						if(rgb[i] > 0.04045D)
+						{
+							rgb[i] = Math.Pow((rgb[i]+0.55D)/(1.0D+0.055D),2.4D);
+						}
+						else
+						{
+							rgb[i] /= 12.92D;
+						}
+					}
+	
+					double X = rgb[0] * 0.649926D + rgb[1] * 0.103455D + rgb[2] * 0.197109D;
+				   
+					double Y = rgb[0] * 0.234327D + rgb[1] * 0.743075D + rgb[2] * 0.022598D;
+				   
+					double Z = rgb[0] * 0.0000000D + rgb[1] * 0.053077D + rgb[2] * 1.035763D;
+					
+					double x = Math.Round(X/(X+Y+Z),3);
+					double y = Math.Round(Y/(X+Y+Z),3);
+					
+					this.setXY(ID,x,y);		
+				}		
+		}			
+		
 	}
 }
