@@ -72,7 +72,6 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HUEstonPreset.cs" />
     <Compile Include="FixedWebClient.cs" />
     <Compile Include="GetIP.cs" />
     <Compile Include="Group.cs" />
@@ -86,10 +85,6 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="PresetDashboard.cs" />
-    <Compile Include="PresetDashboard.Designer.cs">
-      <DependentUpon>PresetDashboard.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoomDashboard.cs" />
@@ -100,13 +95,8 @@
     <Compile Include="Setup.Designer.cs">
       <DependentUpon>Setup.cs</DependentUpon>
     </Compile>
-    <Compile Include="SharedFunctions.cs" />
     <Compile Include="SimpleCFGReader.cs" />
     <Compile Include="SimpleCFGWriter.cs" />
-    <Compile Include="TextboxForm.cs" />
-    <Compile Include="TextboxForm.Designer.cs">
-      <DependentUpon>TextboxForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Webservices.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -116,17 +106,11 @@
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PresetDashboard.resx">
-      <DependentUpon>PresetDashboard.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="RoomDashboard.resx">
       <DependentUpon>RoomDashboard.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Setup.resx">
       <DependentUpon>Setup.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TextboxForm.resx">
-      <DependentUpon>TextboxForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

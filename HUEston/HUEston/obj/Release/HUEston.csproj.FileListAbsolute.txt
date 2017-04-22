@@ -7,5 +7,3 @@ E:\Bibliotheken\Dokumente\SharpDevelop Projects\HUEston\HUEston\HUEston\obj\Rele
 E:\Bibliotheken\Dokumente\SharpDevelop Projects\HUEston\HUEston\HUEston\obj\Release\HUEston.Setup.resources
 E:\Bibliotheken\Dokumente\SharpDevelop Projects\HUEston\HUEston\HUEston\obj\Release\HUEston.csproj.GenerateResource.Cache
 E:\Bibliotheken\Dokumente\SharpDevelop Projects\HUEston\HUEston\HUEston\obj\Release\HUEston.exe
-E:\Bibliotheken\Dokumente\SharpDevelop Projects\HUEston\HUEston\HUEston\obj\Release\HUEston.TextboxForm.resources
-E:\Bibliotheken\Dokumente\SharpDevelop Projects\HUEston\HUEston\HUEston\obj\Release\HUEston.PresetDashboard.resources
