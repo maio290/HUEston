@@ -19,7 +19,7 @@ A small GUI for accessing Philips HUE Lamps under any Windows environment.
 |    3   |   Sleep(duration) in ms  |      sleep:500 / Int32     |         The sleepduration after each iteration (if it's not a loop) or after each cycle (if loop)        |
 | 4 |   Commands  |     commands:turnOn:3|loop|campfire:3|sleep:100 / String      |                          The list of the commands for the preset - the structure is the following: function:arg1,arg2,...|function2:arg1|loop|function3:arg1                         |
 
-#### Current commands for presets (basically all functions from HUEFunctions.cs acquired by reflection)
+#### Current commands for presets (basically all functions from HUEFunctions.cs acquired by reflection):
 
 |     Command     	|                       Arguments                      	|                                                     Explanation                                                    	| Limited Range                                      	| Target   	|
 |:---------------:	|:----------------------------------------------------:	|:------------------------------------------------------------------------------------------------------------------:	|----------------------------------------------------	|----------	|
@@ -57,6 +57,12 @@ A small GUI for accessing Philips HUE Lamps under any Windows environment.
 | GRPsetRandomBRI 	|               int gid, int min, int max              	|                     Sets the brightness of the given GID to a random number between min and max                    	|                  min,max: [0-254]                  	|   Group  	|
 |    GRPfadeBRI   	| int gid, int sleep, int stepsize, int start, int end 	| Fades the brightness of the given GID from start to endby reducing or increasing it's value by stepsize each cycle 	| stepsize: [1-254] start, end: [0-254] sleep: [0-∞[ 	|   Group  	|
 
+#### Example Preset
+
+`9:
+	name:Campfire
+	sleep:0
+	commands:turnOn:3|loop|campfire:3|sleep:100`
 
 ## Things to come
 * Preset-Builder
