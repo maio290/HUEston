@@ -15,7 +15,7 @@ A small GUI for accessing Philips HUE Lamps under any Windows environment.
 |    Line   | Variable | Example / Format |                               Explanation                                |
 |:-------------:|:--------:|:---------------:|:-------------------------------------------------------------------------:|
 |  1  |   ID  |     1: / Int32     | The primary key of the preset (simple auto increment) |
-|  2  |   Name  |    name:Colour Loop / string    |   The name for you preset  |
+|  2  |   Name  |    name:Colour Loop / string    |   The name of your preset  |
 |    3   |   Sleep(duration) in ms  |      sleep:500 / Int32     |         The sleepduration after each iteration (if it's not a loop) or after each cycle (if loop)        |
 | 4 |   Commands  |     commands:turnOn:3|loop|campfire:3|sleep:100 / String      |                          The list of the commands for the preset - the structure is the following: function:arg1,arg2,...|function2:arg1|loop|function3:arg1                         |
 
