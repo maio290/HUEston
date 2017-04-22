@@ -60,8 +60,11 @@ A small GUI for accessing Philips HUE Lamps under any Windows environment.
 #### Example Preset
 
 `9:
+
 name:Campfire
+
 sleep:0
+
 commands:turnOn:3|loop|campfire:3|sleep:100`
 
 ## Things to come
