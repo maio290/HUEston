@@ -5,13 +5,14 @@ A small GUI for accessing Philips HUE Lamps under any Windows environment.
 
 * Setup and pairing with your HUE Bridge (config will be saved)
 * Autodetection of your HUE Bridge by using Philips nupnp service
-* Control of your lamps per room
-* Control of each lamp individually
+* Control of your lamps per room 
 
 ## Things to come
+
+* Individual control of every lamp
 * Presets for moods or stuff like that (including config writer)
-* Current colour display 
-* New GUI
+* Room-View Mode (getting, display and modify states per Room under Rooms)
+* Lamp-Mode ((getting, display and modify states per Lamp under Lamps)
 
 ## Issues or untested Things
 

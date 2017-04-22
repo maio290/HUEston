@@ -99,18 +99,40 @@ namespace HUEston
 		{
 			
 			List<int> primaries = new List<int>();
+			int offset = 0;
 			
 			for(int i = 1; i<100; i++)
 			{
-				if(json.IndexOf("\""+i+"\":{") != -1)
+				
+				if(offset >= json.Length)
+				{
+					break;
+				}
+				
+				if(json.IndexOf("\""+i+"\":{",offset) != -1)
 				{
 					// Bugfix for deleted groups (yes, primary keys will not be shifted, even if the group was deleted)
 					
-					if(json.IndexOf("not available") != -1)
-					{continue;}
+					if(json.IndexOf("not available",offset) != -1)
+					{offset += json.IndexOf("\""+i+"\":{",offset)+1;
+						continue;}
+				
+
+					// determine name of group to get rid of Custom group for $lights
+
+					int nameStart = json.IndexOf("\"name\":",json.IndexOf("\""+i+"\":{",offset))+8;
+					int nameEnd =  json.IndexOf('"',nameStart);			
+					string name = json.Substring(nameStart,nameEnd-nameStart);
 
 					
+					if(name.Equals("Custom group for $lights"))
+					{
+						offset += json.IndexOf("\""+i+"\":{",offset)+1;
+						continue;
+					}
+					
 					primaries.Add(i);
+					offset += json.IndexOf("\""+i+"\":{",offset)+1;
 				}
 			}
 			
@@ -198,17 +220,18 @@ namespace HUEston
 		
 		public string[] extractGroupInfo(int primary, string json)
 		{
-			string[] groupInfo = new string[2];
-			
-			int GroupStart = json.IndexOf("\""+primary+"\"");
+			string[] groupInfo = new string[2];	
+						
+			int GroupStart = json.IndexOf("\""+primary+"\":{");
 			
 			int nameStart = json.IndexOf("\"name\":",GroupStart)+8;
 			int nameEnd =  json.IndexOf('"',nameStart);
 			groupInfo[0] = json.Substring(nameStart,nameEnd-nameStart);			
 			
-			int lightsStart = json.IndexOf("\"lights\":")+10;
+			int lightsStart = json.IndexOf("\"lights\":",GroupStart)+10;
 			int lightsEnd = json.IndexOf(']',lightsStart);
 			groupInfo[1] = json.Substring(lightsStart,lightsEnd-lightsStart);
+			
 			
 			return groupInfo;			
 			
@@ -328,6 +351,40 @@ namespace HUEston
 			
 			return LightList;		
 		}
+
+		// universal functions
+		
+		public double[] RGBtoXY(int R, int G, int B)
+		{
+			double[] rgb = {R,G,B};
+			rgb[0] /= 255D;
+			rgb[1] /= 255D;
+			rgb[2] /= 255D;
+	
+			// fix colours
+			for(int i = 0; i<rgb.Length; i++)
+			{
+				if(rgb[i] > 0.04045D)
+				{
+				rgb[i] = Math.Pow((rgb[i]+0.55D)/(1.0D+0.055D),2.4D);
+				}
+				else
+				{
+				rgb[i] /= 12.92D;
+				}
+			}
+	
+			double X = rgb[0] * 0.649926D + rgb[1] * 0.103455D + rgb[2] * 0.197109D;
+				   
+			double Y = rgb[0] * 0.234327D + rgb[1] * 0.743075D + rgb[2] * 0.022598D;
+				   
+			double Z = rgb[0] * 0.0000000D + rgb[1] * 0.053077D + rgb[2] * 1.035763D;
+					
+			double x = Math.Round(X/(X+Y+Z),3);
+			double y = Math.Round(Y/(X+Y+Z),3);
+			double[] xy = {x,y};
+			return xy;			
+		}
 		
 		// Bulb functions		
 		public void turnOn(int id)
@@ -355,10 +412,97 @@ namespace HUEston
 			ws.putData("http://"+bridgeIP+"/api/"+bridgeUser+"/lights/"+id+"/state","{\"xy\":["+x+","+y+"]}");
 		}
 		
+		public void setCT(int id, int ct)
+		{
+			ws.putData("http://"+bridgeIP+"/api/"+bridgeUser+"/lights/"+id+"/state","{\"ct\":"+ct+"}");
+		}
+
+		public void setHUE(int id, int hue)
+		{
+			ws.putData("http://"+bridgeIP+"/api/"+bridgeUser+"/lights/"+id+"/state","{\"hue\":"+hue+"}");
+		}			
+		
 		public void setBRI(int id, int bri)
 		{
 			ws.putData("http://"+bridgeIP+"/api/"+bridgeUser+"/lights/"+id+"/state","{\"bri\":"+bri+"}");
 		}		
+
+		public void setAlert(int id)
+		{
+			ws.putData("http://"+bridgeIP+"/api/"+bridgeUser+"/lights/"+id+"/state","{\"alert\":\"select\"}");
+		}
+
+		// functions with references to the above functions (used for presets)		
+		public void pulsate(int id, int sleep)
+		{
+			setBRI(id,1);
+			try
+			{Thread.Sleep(sleep);}
+			catch(ThreadInterruptedException)
+			{}
+			setBRI(id,254);
+		}
+		
+		public void campfire(int id)
+		{
+			Random rnd = new Random();
+			int R = rnd.Next(220,250);
+			int G = rnd.Next(65,100);
+			int B = rnd.Next(0,1);
+			
+			double[] xy = RGBtoXY(R,G,B);
+			
+			int bri = rnd.Next(100,254);
+			
+			setBRI(id,bri);
+			setXY(id,xy[0],xy[1]);	
+		}
+		
+		public void setRandomHUE(int id)
+		{
+			Random rnd = new Random();
+			setHUE(id,rnd.Next(0,65280));
+		}
+		
+		public void setRandomBRI(int id, int min, int max)
+		{
+			Random rnd = new Random();
+			setBRI(id,rnd.Next(min,max));
+		}
+		
+		public void fadeBRI(int id, int sleep, int stepsize, int start, int end)
+		{
+			// valid start / end: ]0,255[
+			// valid stepsize: all <= Math.abs(start-end)
+			if(stepsize == 0 || start == end)
+			{return;}
+
+			// check for fadein or fadeout and change
+
+			if(start > end)
+			{
+				for(int i = start; i>end; i=i-stepsize)
+				{
+					setBRI(id,i);
+					try
+					{Thread.Sleep(sleep);}
+					catch(ThreadInterruptedException)
+					{}				
+				}
+			}
+			else
+			{
+				for(int i = start; i<end; i=i+stepsize)
+				{
+					setBRI(id,i);
+					try
+					{Thread.Sleep(sleep);}
+					catch(ThreadInterruptedException)
+					{}				
+				}			
+			}
+		}
+		
 		
 		// Group functions
 		public void GRPturnOn(int gid)
@@ -386,6 +530,11 @@ namespace HUEston
 			ws.putData("http://"+bridgeIP+"/api/"+bridgeUser+"/groups/"+gid+"/action","{\"hue_inc\":1500}");
 		}
 		
+		public void GRPhueIncManual(int gid, int hue)
+		{
+			ws.putData("http://"+bridgeIP+"/api/"+bridgeUser+"/groups/"+gid+"/action","{\"hue_inc\":"+hue+"}");
+		}			
+		
 		public void GRPhueDec(int gid)
 		{
 			ws.putData("http://"+bridgeIP+"/api/"+bridgeUser+"/groups/"+gid+"/action","{\"hue_inc\":-1500}");
@@ -399,6 +548,11 @@ namespace HUEston
 		public void GRPsatDec(int gid)
 		{
 			ws.putData("http://"+bridgeIP+"/api/"+bridgeUser+"/groups/"+gid+"/action","{\"sat_inc\":-50}");
+		}
+		
+		public void GRPsetHUE(int gid, int hue)
+		{
+			ws.putData("http://"+bridgeIP+"/api/"+bridgeUser+"/groups/"+gid+"/action","{\"hue\":"+hue+"}");
 		}
 
 		public void GRPsetCT(int gid, int ct)
@@ -416,6 +570,63 @@ namespace HUEston
 			ws.putData("http://"+bridgeIP+"/api/"+bridgeUser+"/groups/"+gid+"/action","{\"bri\":"+bri+"}");
 		}
 
+		// functions with references to the above group functions
+		
+		public void GRPpulsate(int gid, int sleep)
+		{
+			GRPbriSet(gid,1);
+			try
+			{Thread.Sleep(sleep);}
+			catch(ThreadInterruptedException)
+			{}
+			GRPbriSet(gid,254);
+		}
+		
+		public void GRPsetRandomHUE(int gid)
+		{
+			Random rnd = new Random();
+			GRPsetHUE(gid,rnd.Next(0,65280));
+		}
+		
+		public void GRPsetRandomBRI(int gid, int min, int max)
+		{
+			Random rnd = new Random();
+			GRPbriSet(gid,rnd.Next(min,max));
+		}
+		
+		public void GRPfadeBRI(int gid, int sleep, int stepsize, int start, int end)
+		{
+			// valid start / end: ]0,255[
+			// valid stepsize: all <= Math.abs(start-end)
+			if(stepsize == 0 || start == end)
+			{return;}
+
+			// check for fadein or fadeout and change
+
+			if(start > end)
+			{
+				for(int i = start; i>end; i=i-stepsize)
+				{
+					GRPbriSet(gid,i);
+					try
+					{Thread.Sleep(sleep);}
+					catch(ThreadInterruptedException)
+					{}				
+				}
+			}
+			else
+			{
+				for(int i = start; i<end; i=i+stepsize)
+				{
+					GRPbriSet(gid,i);
+					try
+					{Thread.Sleep(sleep);}
+					catch(ThreadInterruptedException)
+					{}				
+				}			
+			}
+		}		
+		
 		public void switchColourDialog(int GID)
 		{
 				// used for groups
@@ -456,7 +667,6 @@ namespace HUEston
 					
 					double x = Math.Round(X/(X+Y+Z),3);
 					double y = Math.Round(Y/(X+Y+Z),3);
-					
 					this.GRPsetXY(GID,x,y);		
 				}		
 		}
