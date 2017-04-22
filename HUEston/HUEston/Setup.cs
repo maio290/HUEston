@@ -132,7 +132,7 @@ namespace HUEston
 				if(File.Exists("./config.cfg"))
 				{this.Dispose();}
 				else
-				{Application.Exit();}
+				{Environment.Exit(0);}
 			
 			}
 			

@@ -41,7 +41,6 @@ namespace HUEston
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
 			this.SSLampQTY = new System.Windows.Forms.ToolStripStatusLabel();
-			this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
 			this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
 			this.SSRoomQTY = new System.Windows.Forms.ToolStripStatusLabel();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -51,16 +50,23 @@ namespace HUEston
 			this.lampsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.dashboardToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.scenesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.dashboardToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
 			this.configToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.bridgeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.presetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.buildPresetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.showGroupsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.showLightsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.showAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.showFunctionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.button6 = new System.Windows.Forms.Button();
-			this.button5 = new System.Windows.Forms.Button();
-			this.button4 = new System.Windows.Forms.Button();
-			this.button3 = new System.Windows.Forms.Button();
-			this.button2 = new System.Windows.Forms.Button();
-			this.button1 = new System.Windows.Forms.Button();
+			this.BTPreset6 = new System.Windows.Forms.Button();
+			this.BTPreset5 = new System.Windows.Forms.Button();
+			this.BTPreset4 = new System.Windows.Forms.Button();
+			this.BTPreset3 = new System.Windows.Forms.Button();
+			this.BTPreset2 = new System.Windows.Forms.Button();
+			this.BTPreset1 = new System.Windows.Forms.Button();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.BTBriDown = new System.Windows.Forms.Button();
 			this.BTBriUP = new System.Windows.Forms.Button();
@@ -84,7 +90,8 @@ namespace HUEston
 			this.BTDecSat = new System.Windows.Forms.Button();
 			this.BTIncSat = new System.Windows.Forms.Button();
 			this.BTColSelect = new System.Windows.Forms.Button();
-			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+			this.SSPresetQTY = new System.Windows.Forms.ToolStripStatusLabel();
 			this.statusStrip1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
@@ -101,42 +108,42 @@ namespace HUEston
 									this.toolStripStatusLabel1,
 									this.SSLampQTY,
 									this.toolStripStatusLabel2,
+									this.SSPresetQTY,
 									this.toolStripStatusLabel3,
 									this.SSRoomQTY});
 			this.statusStrip1.Location = new System.Drawing.Point(0, 552);
 			this.statusStrip1.Name = "statusStrip1";
 			this.statusStrip1.Size = new System.Drawing.Size(512, 22);
+			this.statusStrip1.SizingGrip = false;
 			this.statusStrip1.TabIndex = 0;
 			this.statusStrip1.Text = "statusStrip1";
 			// 
 			// toolStripStatusLabel1
 			// 
+			this.toolStripStatusLabel1.Margin = new System.Windows.Forms.Padding(14, 3, 3, 3);
 			this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-			this.toolStripStatusLabel1.Size = new System.Drawing.Size(106, 17);
+			this.toolStripStatusLabel1.Size = new System.Drawing.Size(106, 16);
 			this.toolStripStatusLabel1.Text = "Amount of Lamps:";
 			// 
 			// SSLampQTY
 			// 
+			this.SSLampQTY.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.SSLampQTY.Name = "SSLampQTY";
-			this.SSLampQTY.Size = new System.Drawing.Size(14, 17);
+			this.SSLampQTY.Size = new System.Drawing.Size(14, 16);
 			this.SSLampQTY.Text = "#";
-			// 
-			// toolStripStatusLabel2
-			// 
-			this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-			this.toolStripStatusLabel2.Size = new System.Drawing.Size(10, 17);
-			this.toolStripStatusLabel2.Text = "|";
 			// 
 			// toolStripStatusLabel3
 			// 
+			this.toolStripStatusLabel3.Margin = new System.Windows.Forms.Padding(50, 3, 3, 3);
 			this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
-			this.toolStripStatusLabel3.Size = new System.Drawing.Size(108, 17);
+			this.toolStripStatusLabel3.Size = new System.Drawing.Size(108, 16);
 			this.toolStripStatusLabel3.Text = "Amount of Rooms:";
 			// 
 			// SSRoomQTY
 			// 
+			this.SSRoomQTY.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
 			this.SSRoomQTY.Name = "SSRoomQTY";
-			this.SSRoomQTY.Size = new System.Drawing.Size(14, 17);
+			this.SSRoomQTY.Size = new System.Drawing.Size(14, 16);
 			this.SSRoomQTY.Text = "#";
 			// 
 			// menuStrip1
@@ -192,9 +199,18 @@ namespace HUEston
 			// 
 			// scenesToolStripMenuItem
 			// 
+			this.scenesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+									this.dashboardToolStripMenuItem2});
 			this.scenesToolStripMenuItem.Name = "scenesToolStripMenuItem";
-			this.scenesToolStripMenuItem.Size = new System.Drawing.Size(55, 20);
-			this.scenesToolStripMenuItem.Text = "Scenes";
+			this.scenesToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
+			this.scenesToolStripMenuItem.Text = "Presets";
+			// 
+			// dashboardToolStripMenuItem2
+			// 
+			this.dashboardToolStripMenuItem2.Name = "dashboardToolStripMenuItem2";
+			this.dashboardToolStripMenuItem2.Size = new System.Drawing.Size(131, 22);
+			this.dashboardToolStripMenuItem2.Text = "Dashboard";
+			this.dashboardToolStripMenuItem2.Click += new System.EventHandler(this.DashboardToolStripMenuItem2Click);
 			// 
 			// configToolStripMenuItem
 			// 
@@ -208,24 +224,72 @@ namespace HUEston
 			// bridgeToolStripMenuItem
 			// 
 			this.bridgeToolStripMenuItem.Name = "bridgeToolStripMenuItem";
-			this.bridgeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.bridgeToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
 			this.bridgeToolStripMenuItem.Text = "Bridge";
 			this.bridgeToolStripMenuItem.Click += new System.EventHandler(this.BridgeToolStripMenuItemClick);
 			// 
 			// presetsToolStripMenuItem
 			// 
+			this.presetsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+									this.buildPresetToolStripMenuItem,
+									this.showGroupsToolStripMenuItem,
+									this.showLightsToolStripMenuItem,
+									this.showAllToolStripMenuItem,
+									this.showFunctionsToolStripMenuItem});
 			this.presetsToolStripMenuItem.Name = "presetsToolStripMenuItem";
-			this.presetsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.presetsToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
 			this.presetsToolStripMenuItem.Text = "Presets";
+			// 
+			// buildPresetToolStripMenuItem
+			// 
+			this.buildPresetToolStripMenuItem.Name = "buildPresetToolStripMenuItem";
+			this.buildPresetToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+			this.buildPresetToolStripMenuItem.Text = "Build Preset";
+			this.buildPresetToolStripMenuItem.Click += new System.EventHandler(this.BuildPresetToolStripMenuItemClick);
+			// 
+			// showGroupsToolStripMenuItem
+			// 
+			this.showGroupsToolStripMenuItem.Name = "showGroupsToolStripMenuItem";
+			this.showGroupsToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+			this.showGroupsToolStripMenuItem.Text = "Show Groups";
+			this.showGroupsToolStripMenuItem.Click += new System.EventHandler(this.ShowGroupsToolStripMenuItemClick);
+			// 
+			// showLightsToolStripMenuItem
+			// 
+			this.showLightsToolStripMenuItem.Name = "showLightsToolStripMenuItem";
+			this.showLightsToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+			this.showLightsToolStripMenuItem.Text = "Show Lights";
+			this.showLightsToolStripMenuItem.Click += new System.EventHandler(this.ShowLightsToolStripMenuItemClick);
+			// 
+			// showAllToolStripMenuItem
+			// 
+			this.showAllToolStripMenuItem.Name = "showAllToolStripMenuItem";
+			this.showAllToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+			this.showAllToolStripMenuItem.Text = "Show All";
+			this.showAllToolStripMenuItem.Click += new System.EventHandler(this.ShowAllToolStripMenuItemClick);
+			// 
+			// showFunctionsToolStripMenuItem
+			// 
+			this.showFunctionsToolStripMenuItem.Name = "showFunctionsToolStripMenuItem";
+			this.showFunctionsToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+			this.showFunctionsToolStripMenuItem.Text = "Show Functions";
+			this.showFunctionsToolStripMenuItem.Click += new System.EventHandler(this.ShowFunctionsToolStripMenuItemClick);
+			// 
+			// aboutToolStripMenuItem
+			// 
+			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+			this.aboutToolStripMenuItem.Text = "About";
+			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItemClick);
 			// 
 			// groupBox1
 			// 
-			this.groupBox1.Controls.Add(this.button6);
-			this.groupBox1.Controls.Add(this.button5);
-			this.groupBox1.Controls.Add(this.button4);
-			this.groupBox1.Controls.Add(this.button3);
-			this.groupBox1.Controls.Add(this.button2);
-			this.groupBox1.Controls.Add(this.button1);
+			this.groupBox1.Controls.Add(this.BTPreset6);
+			this.groupBox1.Controls.Add(this.BTPreset5);
+			this.groupBox1.Controls.Add(this.BTPreset4);
+			this.groupBox1.Controls.Add(this.BTPreset3);
+			this.groupBox1.Controls.Add(this.BTPreset2);
+			this.groupBox1.Controls.Add(this.BTPreset1);
 			this.groupBox1.Location = new System.Drawing.Point(12, 184);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Size = new System.Drawing.Size(488, 59);
@@ -233,59 +297,65 @@ namespace HUEston
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Presets";
 			// 
-			// button6
+			// BTPreset6
 			// 
-			this.button6.Location = new System.Drawing.Point(407, 19);
-			this.button6.Name = "button6";
-			this.button6.Size = new System.Drawing.Size(75, 23);
-			this.button6.TabIndex = 5;
-			this.button6.Text = "button6";
-			this.button6.UseVisualStyleBackColor = true;
+			this.BTPreset6.Location = new System.Drawing.Point(407, 19);
+			this.BTPreset6.Name = "BTPreset6";
+			this.BTPreset6.Size = new System.Drawing.Size(75, 23);
+			this.BTPreset6.TabIndex = 5;
+			this.BTPreset6.Text = "button6";
+			this.BTPreset6.UseVisualStyleBackColor = true;
+			this.BTPreset6.Click += new System.EventHandler(this.BTPreset6Click);
 			// 
-			// button5
+			// BTPreset5
 			// 
-			this.button5.Location = new System.Drawing.Point(330, 19);
-			this.button5.Name = "button5";
-			this.button5.Size = new System.Drawing.Size(75, 23);
-			this.button5.TabIndex = 4;
-			this.button5.Text = "button5";
-			this.button5.UseVisualStyleBackColor = true;
+			this.BTPreset5.Location = new System.Drawing.Point(330, 19);
+			this.BTPreset5.Name = "BTPreset5";
+			this.BTPreset5.Size = new System.Drawing.Size(75, 23);
+			this.BTPreset5.TabIndex = 4;
+			this.BTPreset5.Text = "button5";
+			this.BTPreset5.UseVisualStyleBackColor = true;
+			this.BTPreset5.Click += new System.EventHandler(this.BTPreset5Click);
 			// 
-			// button4
+			// BTPreset4
 			// 
-			this.button4.Location = new System.Drawing.Point(249, 19);
-			this.button4.Name = "button4";
-			this.button4.Size = new System.Drawing.Size(75, 23);
-			this.button4.TabIndex = 3;
-			this.button4.Text = "button4";
-			this.button4.UseVisualStyleBackColor = true;
+			this.BTPreset4.Location = new System.Drawing.Point(249, 19);
+			this.BTPreset4.Name = "BTPreset4";
+			this.BTPreset4.Size = new System.Drawing.Size(75, 23);
+			this.BTPreset4.TabIndex = 3;
+			this.BTPreset4.Text = "button4";
+			this.BTPreset4.UseVisualStyleBackColor = true;
+			this.BTPreset4.Click += new System.EventHandler(this.BTPreset4Click);
 			// 
-			// button3
+			// BTPreset3
 			// 
-			this.button3.Location = new System.Drawing.Point(168, 19);
-			this.button3.Name = "button3";
-			this.button3.Size = new System.Drawing.Size(75, 23);
-			this.button3.TabIndex = 2;
-			this.button3.Text = "button3";
-			this.button3.UseVisualStyleBackColor = true;
+			this.BTPreset3.Location = new System.Drawing.Point(168, 19);
+			this.BTPreset3.Name = "BTPreset3";
+			this.BTPreset3.Size = new System.Drawing.Size(75, 23);
+			this.BTPreset3.TabIndex = 2;
+			this.BTPreset3.Text = "button3";
+			this.BTPreset3.UseVisualStyleBackColor = true;
+			this.BTPreset3.Click += new System.EventHandler(this.BTPreset3Click);
 			// 
-			// button2
+			// BTPreset2
 			// 
-			this.button2.Location = new System.Drawing.Point(87, 19);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(75, 23);
-			this.button2.TabIndex = 1;
-			this.button2.Text = "button2";
-			this.button2.UseVisualStyleBackColor = true;
+			this.BTPreset2.Location = new System.Drawing.Point(87, 19);
+			this.BTPreset2.Name = "BTPreset2";
+			this.BTPreset2.Size = new System.Drawing.Size(75, 23);
+			this.BTPreset2.TabIndex = 1;
+			this.BTPreset2.Text = "button2";
+			this.BTPreset2.UseVisualStyleBackColor = true;
+			this.BTPreset2.Click += new System.EventHandler(this.BTPreset2Click);
 			// 
-			// button1
+			// BTPreset1
 			// 
-			this.button1.Location = new System.Drawing.Point(6, 19);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 23);
-			this.button1.TabIndex = 0;
-			this.button1.Text = "button1";
-			this.button1.UseVisualStyleBackColor = true;
+			this.BTPreset1.Location = new System.Drawing.Point(6, 19);
+			this.BTPreset1.Name = "BTPreset1";
+			this.BTPreset1.Size = new System.Drawing.Size(75, 23);
+			this.BTPreset1.TabIndex = 0;
+			this.BTPreset1.Text = "Preset 1";
+			this.BTPreset1.UseVisualStyleBackColor = true;
+			this.BTPreset1.Click += new System.EventHandler(this.BTPreset1Click);
 			// 
 			// groupBox2
 			// 
@@ -513,12 +583,19 @@ namespace HUEston
 			this.BTColSelect.UseVisualStyleBackColor = true;
 			this.BTColSelect.Click += new System.EventHandler(this.BTColSelectClick);
 			// 
-			// aboutToolStripMenuItem
+			// toolStripStatusLabel2
 			// 
-			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
-			this.aboutToolStripMenuItem.Text = "About";
-			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItemClick);
+			this.toolStripStatusLabel2.Margin = new System.Windows.Forms.Padding(50, 3, 3, 3);
+			this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+			this.toolStripStatusLabel2.Size = new System.Drawing.Size(108, 16);
+			this.toolStripStatusLabel2.Text = "Amount of Presets:";
+			// 
+			// SSPresetQTY
+			// 
+			this.SSPresetQTY.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+			this.SSPresetQTY.Name = "SSPresetQTY";
+			this.SSPresetQTY.Size = new System.Drawing.Size(14, 16);
+			this.SSPresetQTY.Text = "#";
 			// 
 			// MainForm
 			// 
@@ -554,6 +631,14 @@ namespace HUEston
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.ToolStripStatusLabel SSPresetQTY;
+		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+		private System.Windows.Forms.ToolStripMenuItem dashboardToolStripMenuItem2;
+		private System.Windows.Forms.ToolStripMenuItem buildPresetToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem showAllToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem showFunctionsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem showLightsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem showGroupsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem dashboardToolStripMenuItem1;
 		private System.Windows.Forms.ToolStripMenuItem dashboardToolStripMenuItem;
@@ -583,12 +668,12 @@ namespace HUEston
 		private System.Windows.Forms.Button BTBriUP;
 		private System.Windows.Forms.Button BTBriDown;
 		private System.Windows.Forms.GroupBox groupBox2;
-		private System.Windows.Forms.Button button1;
-		private System.Windows.Forms.Button button2;
-		private System.Windows.Forms.Button button3;
-		private System.Windows.Forms.Button button4;
-		private System.Windows.Forms.Button button5;
-		private System.Windows.Forms.Button button6;
+		private System.Windows.Forms.Button BTPreset1;
+		private System.Windows.Forms.Button BTPreset2;
+		private System.Windows.Forms.Button BTPreset3;
+		private System.Windows.Forms.Button BTPreset4;
+		private System.Windows.Forms.Button BTPreset5;
+		private System.Windows.Forms.Button BTPreset6;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.ToolStripMenuItem configToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem lampsToolStripMenuItem;
@@ -597,7 +682,6 @@ namespace HUEston
 		private System.Windows.Forms.MenuStrip menuStrip1;
 		private System.Windows.Forms.ToolStripStatusLabel SSRoomQTY;
 		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
-		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
 		private System.Windows.Forms.ToolStripStatusLabel SSLampQTY;
 		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
 		private System.Windows.Forms.StatusStrip statusStrip1;

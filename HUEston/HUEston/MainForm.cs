@@ -21,6 +21,10 @@ namespace HUEston
 	{
 		HUEFunctions hf;
 		int selGID = 0;
+		List<HUEstonPreset> presetList = new List<HUEstonPreset>();
+		Thread[] presetArray;
+		Button[] referencePresetButtons = new Button[6];
+		
 		public MainForm()
 		{
 			//
@@ -28,10 +32,13 @@ namespace HUEston
 			//
 			InitializeComponent();
 			
+			
+			SimpleCFGReader configReader = new SimpleCFGReader();
+			
 			// read config file			
 			if(File.Exists("./config.cfg"))
 			{
-				string[] cfgfile = SimpleCFGReader.readCFG();
+				string[] cfgfile = configReader.readCFG("./config.cfg");
 				TBBridgeIP.Text = cfgfile[0];
 				TBBridgeUser.Text = cfgfile[1];
 				// construct HUEFunctions class with read values
@@ -46,6 +53,115 @@ namespace HUEston
 				CBRooms.ValueMember = "gid";
 				CBRooms.DataSource = BSCBRooms.DataSource;
 				CBRooms.BindingContext = this.BindingContext;
+				
+					// load presets
+					if(File.Exists("./presets.cfg"))
+					{
+						string[] rawPresets = configReader.readCFG("./presets.cfg");
+						
+						
+						// each preset consists of four lines: id, name, sleep, commands
+						// check if file is corrups by modulo and zero
+						
+						if(rawPresets.Length%4 != 0 || rawPresets.Length == 0)
+						{
+							MessageBox.Show("Your preset config file is corrupt, please check your preset.cfg!","[HUEston] Presetfile corrupt",MessageBoxButtons.OK,MessageBoxIcon.Error);
+						}
+						
+						int additionalArrayIndexer = 0;
+						presetArray = new Thread[rawPresets.Length/4];
+						
+						
+						// fix for dirty coding style, since exceptions would be thrown if the buttons were available
+						if(presetArray.Length < 6)
+						{
+							for(int i = presetArray.Length+1; i<=6; i++)
+							{
+								switch(i)
+								{
+									case 1:
+										BTPreset1.Hide();
+										break;
+									case 2:
+										BTPreset2.Hide();
+										break;
+									case 3:
+										BTPreset3.Hide();
+										break;
+									case 4:
+										BTPreset4.Hide();
+										break;
+									case 5:
+										BTPreset5.Hide();
+										break;
+									case 6:
+										BTPreset6.Hide();
+										break;
+								}
+							}
+						}
+						
+						for(int i = 0; i<rawPresets.Length; i=i+4)
+						{
+							int id = Convert.ToInt32(rawPresets[i].Substring(0,rawPresets[i].IndexOf(":")));
+							string name = rawPresets[i+1].Substring(rawPresets[i+1].IndexOf(":")+1);
+							int sleep = Convert.ToInt32(rawPresets[i+2].Substring(rawPresets[i+2].IndexOf(":")+1));
+							string commands = rawPresets[i+3].Substring(rawPresets[i+3].IndexOf(":")+1);
+							
+							HUEstonPreset tempPreset = new HUEstonPreset(name,sleep,id,commands,hf);
+							presetList.Add(tempPreset);
+							presetArray[additionalArrayIndexer] = tempPreset.getExectueThread();
+								
+							// this is a little bit dirty, but the buttons are hardcoded here by design, not the best decision, but cba to change it at this state
+								
+								switch(++additionalArrayIndexer)
+								{
+								case 1:
+									BTPreset1.Text = name;
+									break;
+								case 2:
+									BTPreset2.Text = name;
+									break;
+								case 3:
+									BTPreset3.Text = name;
+									break;
+								case 4:
+									BTPreset4.Text = name;
+									break;
+								case 5:
+									BTPreset5.Text = name;
+									break;
+								case 6:
+									BTPreset6.Text = name;
+									break;
+								}	
+						}
+						
+						
+					}
+					else
+					{
+						// for testing and demonstration:
+						HUEstonPreset preset1 = new HUEstonPreset("Colour Loop",1000,1,"loop|GRPhueIncManual:1,250",hf);
+						presetList.Add(preset1);
+						presetArray = new Thread[1];
+						presetArray[0] = preset1.getExectueThread();
+						BTPreset1.Text = preset1.name;
+						BTPreset2.Hide();
+						BTPreset3.Hide();
+						BTPreset4.Hide();
+						BTPreset5.Hide();
+						BTPreset6.Hide();
+					}
+					
+						SSPresetQTY.Text = presetList.Count.ToString();
+						referencePresetButtons[0] = BTPreset1;
+						referencePresetButtons[1] = BTPreset2;
+						referencePresetButtons[2] = BTPreset3;
+						referencePresetButtons[3] = BTPreset4;
+						referencePresetButtons[4] = BTPreset5;
+						referencePresetButtons[5] = BTPreset6;
+					
 				
 			}
 			else
@@ -195,6 +311,13 @@ namespace HUEston
 		
 		void MainFormFormClosing(object sender, FormClosingEventArgs e)
 		{
+			for(int i = 0; i<presetArray.Length; i++)
+			{
+				try
+				{presetArray[i].Abort();}
+				catch(ThreadInterruptedException)
+				{}
+			}
 			Application.Exit();
 		}
 		
@@ -207,7 +330,180 @@ namespace HUEston
 		
 		void AboutToolStripMenuItemClick(object sender, EventArgs e)
 		{
-			MessageBox.Show("HUEston Version 0.52 - 28.03.2017 - written by Mario-Luca Hoffmann \nhttps://github.com/maio290/HUEston","HUEston - About",MessageBoxButtons.OK,MessageBoxIcon.Information);
+			MessageBox.Show("HUEston Version 0.55 - 22.04.2017 - written by Mario-Luca Hoffmann \nhttps://github.com/maio290/HUEston","HUEston - About",MessageBoxButtons.OK,MessageBoxIcon.Information);
+		}
+		
+
+		
+		void BTPreset1Click(object sender, EventArgs e)
+		{
+			if(!presetArray[0].IsAlive || presetArray[0].ThreadState == ThreadState.Stopped)
+			{
+				presetArray[0] = presetList[0].getExectueThread();
+				if(presetList[0].content.Contains("loop"))
+				{
+					BTPreset1.ForeColor  = Color.Green;
+				}
+				presetArray[0].Start();
+			}
+			else
+			{
+				try
+				{presetArray[0].Abort();}
+				catch(ThreadInterruptedException)
+				{}
+				presetArray[0].Join();
+				
+				if(presetList[0].content.Contains("loop"))
+				{
+					BTPreset1.ForeColor  = Color.Red;
+				}				
+			}
+		}
+		
+		void ShowGroupsToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			TextboxForm tb = new TextboxForm(1,hf);
+			tb.Show();
+		}
+		
+		void ShowLightsToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			TextboxForm tb = new TextboxForm(2,hf);
+			tb.Show();
+		}
+
+		
+		void ShowAllToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			TextboxForm tb = new TextboxForm(3,hf);
+			tb.Show();
+		}
+		
+		void ShowFunctionsToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			TextboxForm tb = new TextboxForm(4,hf);
+			tb.Show();
+		}
+
+		
+		void BuildPresetToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			
+		}
+		
+		void BTPreset2Click(object sender, EventArgs e)
+		{
+			if(!presetArray[1].IsAlive || presetArray[1].ThreadState == ThreadState.Stopped)
+			{
+				presetArray[1] = presetList[1].getExectueThread();
+				
+				if(presetList[1].content.Contains("loop"))
+				{BTPreset2.ForeColor  = Color.Green;}
+				
+				presetArray[1].Start();
+				presetArray[1].Join();
+			}
+			else
+			{
+				try
+				{presetArray[1].Abort();}
+				catch(ThreadInterruptedException)
+				{}
+				presetArray[1].Join();
+				if(presetList[1].content.Contains("loop"))
+				{BTPreset2.ForeColor  = Color.Red;}
+			}			
+		}
+		
+		void BTPreset3Click(object sender, EventArgs e)
+		{
+			if(!presetArray[2].IsAlive || presetArray[2].ThreadState == ThreadState.Stopped)
+			{
+				presetArray[2] = presetList[2].getExectueThread();
+				if(presetList[2].content.Contains("loop"))
+				{BTPreset3.ForeColor  = Color.Green;}
+				presetArray[2].Start();
+			}
+			else
+			{
+				try
+				{presetArray[2].Abort();}
+				catch(ThreadInterruptedException)
+				{}
+				presetArray[2].Join();
+				if(presetList[2].content.Contains("loop"))
+				{BTPreset3.ForeColor  = Color.Red;}
+			}			
+		}
+		
+		void BTPreset4Click(object sender, EventArgs e)
+		{
+			if(!presetArray[3].IsAlive || presetArray[3].ThreadState == ThreadState.Stopped)
+			{
+				presetArray[3] = presetList[3].getExectueThread();
+				if(presetList[3].content.Contains("loop"))
+				{BTPreset4.ForeColor  = Color.Green;}
+				presetArray[3].Start();
+			}
+			else
+			{
+				try
+				{presetArray[3].Abort();}
+				catch(ThreadInterruptedException)
+				{}
+				presetArray[3].Join();
+				if(presetList[3].content.Contains("loop"))
+				{BTPreset4.ForeColor  = Color.Red;}
+			}			
+		}
+		
+		void BTPreset5Click(object sender, EventArgs e)
+		{
+			if(!presetArray[4].IsAlive || presetArray[4].ThreadState == ThreadState.Stopped)
+			{
+				presetArray[4] = presetList[4].getExectueThread();
+				if(presetList[4].content.Contains("loop"))
+				{BTPreset5.ForeColor  = Color.Green;}
+				presetArray[4].Start();
+			}
+			else
+			{
+				try
+				{presetArray[4].Abort();}
+				catch(ThreadInterruptedException)
+				{}
+				presetArray[4].Join();
+				if(presetList[4].content.Contains("loop"))
+				{BTPreset5.ForeColor  = Color.Red;}
+			}			
+		}
+		
+		void BTPreset6Click(object sender, EventArgs e)
+		{
+			if(!presetArray[5].IsAlive || presetArray[5].ThreadState == ThreadState.Stopped)
+			{
+				presetArray[5] = presetList[5].getExectueThread();
+				if(presetList[5].content.Contains("loop"))
+				{BTPreset6.ForeColor  = Color.Green;}
+				presetArray[5].Start();
+			}
+			else
+			{
+				try
+				{presetArray[5].Abort();}
+				catch(ThreadInterruptedException)
+				{}
+				presetArray[5].Join();
+				if(presetList[5].content.Contains("loop"))
+				{BTPreset6.ForeColor  = Color.Red;}
+			}			
+		}
+		
+		void DashboardToolStripMenuItem2Click(object sender, EventArgs e)
+		{
+			PresetDashboard pd = new PresetDashboard(presetList,presetArray,referencePresetButtons);
+			pd.Show();
 		}
 	}
 }

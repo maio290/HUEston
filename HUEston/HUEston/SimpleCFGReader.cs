@@ -13,21 +13,24 @@ namespace HUEston
 	/// </summary>
 	public class SimpleCFGReader
 	{
+		string cwd = Directory.GetCurrentDirectory();
 		
-		static string cfg = "/config.cfg";
-		static string cwd = Directory.GetCurrentDirectory();	
+		public SimpleCFGReader()
+		{}
 		
-		public static string[] readCFG()
+		
+		
+		public string[] readCFG(string cfg)
 		{
 			string[] cfgfile = File.ReadAllLines(cwd+cfg);
 			
 			string[] extractedValues = new string[cfgfile.Length];
 			
-			
-			//IP
-			extractedValues[0] = cfgfile[0].Substring(cfgfile[0].IndexOf("=")+1);
-			//Username
-			extractedValues[1] = cfgfile[1].Substring(cfgfile[1].IndexOf("=")+1);
+
+			for(int i = 0; i<cfgfile.Length; i++)
+			{
+				extractedValues[i] = cfgfile[i].Substring(cfgfile[i].IndexOf("=")+1);
+			}
 			
 			return extractedValues;
 		}
