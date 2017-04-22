@@ -1,6 +1,7 @@
 # HUEston
 A small GUI for accessing Philips HUE Lamps under any Windows environment.
 
+![alt text][logo]
 [logo]: http://maio290.de/hueston_2.PNG "HUEston Mainform"
 
 ## Functions
